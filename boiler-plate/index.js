@@ -6,7 +6,6 @@ const { User } = require('./models/User');
 const config = require('./config/key');
 
 app.use(express.json());
-app.use(express.urlencoded());
 
 mongoose
   .connect(config.mongoURI, {
