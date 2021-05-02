@@ -48,9 +48,21 @@ userSchema.pre('save', function (next) {
         next();
       });
     });
+  } else {
+    next();
   }
 });
 
+userSchema.method.comparePassword = function (plainPassword, cb) {
+  //plainPassword 1234567 암호화된 비밀번호 $2b$10$kQeJYEylWp6hKUnM4ADQaeIldjjAEWS7u6YiToCz.psq710wVfJ1a
+  bcrypt.compare(
+    plainPassword,
+    this.password,
+    function (err, isMatch) {
+      if (err) return cb(err), cb(null, isMatch);
+    },
+  );
+};
 // 스키마를 모델로 감싸줌
 const User = mongoose.model('User', userSchema);
 

@@ -30,6 +30,29 @@ app.post('/register', (req, res) => {
     return res.status(200).json({ suceess: true });
   });
 });
+/**
+ * 1. DB 에 요청한 E-mail 찾기 - User.findOne()
+ * 2. DB 에 요청한 E-mail 이 존재한다면 비밀번호가 같은지 확인 - Bcrypt Hashed 값 비교
+ * 3. 비밀번호가 같다면 Token 생성 - JsonWebToken 활용
+ */
+app.post('/login', (req, res) => {
+  User.findOne({ email: req.body.email }, (err, user) => {
+    if (!user) {
+      return res.json({
+        loginSuccess: false,
+        message: 'not_found_email',
+      });
+    }
+    user.comparePassword(req.body.password, (err, isMatch) => {
+      if (!isMatch)
+        return res.json({
+          loginSuccess: false,
+          message: 'not_match_password',
+        });
+      user.generateToken((err, user) => {});
+    });
+  });
+});
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
