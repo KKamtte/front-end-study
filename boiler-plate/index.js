@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-app.post('/register', (req, res) => {
+app.post('api/users/register', (req, res) => {
   //회원 가입할 때 필요한 정보를 client에서 가져오면 데이터 베이스에 넣어준다.
   const user = new User(req.body);
 
@@ -38,7 +38,7 @@ app.post('/register', (req, res) => {
  * 2. DB 에 요청한 E-mail 이 존재한다면 비밀번호가 같은지 확인 - Bcrypt Hashed 값 비교
  * 3. 비밀번호가 같다면 Token 생성 - JsonWebToken 활용
  */
-app.post('/login', (req, res) => {
+app.post('api/users/login', (req, res) => {
   // step1
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user) {
@@ -66,6 +66,8 @@ app.post('/login', (req, res) => {
     });
   });
 });
+
+app.get('/api/users/auth', auth, (req, res) => {});
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
